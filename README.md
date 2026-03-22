@@ -21,6 +21,26 @@
 - **Dual Interface** -- CLI for automation, Streamlit for interactive use
 - **Demo Mode** -- Pre-cached results for instant presentations without network
 
+## Architecture
+
+```mermaid
+graph TD
+    A[Research Query] --> B[DuckDuckGo Search]
+    B --> C[URL Discovery]
+    C --> D[Web Scraper]
+    D -->|robots.txt check| E[Content Extraction]
+    E --> F[TF-IDF Summarizer]
+    E --> G[spaCy Entity Extractor]
+    E --> H[Credibility Scorer]
+    F --> I[Research Report]
+    G --> I
+    H --> I
+    I --> J[Markdown Export]
+    I --> K[PDF Export]
+    I --> L[JSON Export]
+    I --> M[SQLite History]
+```
+
 ## Quick Start
 
 ```bash
