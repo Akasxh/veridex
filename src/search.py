@@ -5,6 +5,7 @@ from __future__ import annotations
 import time
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
+from urllib.parse import urlparse
 
 from ddgs import DDGS
 
@@ -51,7 +52,7 @@ class SearchEngine:
                             title=item.get("title", ""),
                             url=item.get("href", ""),
                             snippet=item.get("body", ""),
-                            source=item.get("href", "").split("/")[2] if item.get("href") else "",
+                            source=urlparse(item.get("href", "")).netloc if item.get("href") else "",
                         )
                     )
         except Exception as e:

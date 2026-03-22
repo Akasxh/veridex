@@ -195,6 +195,117 @@ DEMO_QUERIES: dict[str, dict[str, Any]] = {
             },
         ],
     },
+    "Climate change and renewable energy 2024": {
+        "query": "Climate change and renewable energy 2024",
+        "summary": (
+            "Renewable energy deployment accelerated dramatically in 2024, with global solar capacity "
+            "additions exceeding 400 GW for the first time. Wind and solar now generate over 30% of "
+            "global electricity, surpassing coal in several major economies. The International Energy "
+            "Agency reports that clean energy investment reached $2 trillion, double that of fossil "
+            "fuels. Battery storage costs fell below $100/kWh, enabling grid-scale deployment. Despite "
+            "progress, global emissions reached a new high of 37.4 billion tonnes CO2, driven by "
+            "industrial growth in developing nations. Scientists warn that the 1.5C target requires "
+            "tripling renewable deployment rates and phasing out unabated fossil fuels by 2040."
+        ),
+        "key_sentences": [
+            "Global solar PV installations exceeded 400 GW in 2024, a 58% increase over 2023.",
+            "Clean energy investment reached $2 trillion in 2024, outpacing fossil fuel spending 2-to-1.",
+            "Battery storage costs dropped below $100/kWh for the first time, enabling grid-scale adoption.",
+            "Global CO2 emissions hit a record 37.4 billion tonnes despite renewable energy growth.",
+            "The EU generated 44% of its electricity from renewables in 2024, up from 38% in 2023.",
+            "China installed more solar capacity in 2024 than the entire world did in 2022.",
+        ],
+        "entities": {
+            "ORG": ["IEA", "IPCC", "IRENA", "Tesla", "BYD", "Vestas", "UN Climate"],
+            "GPE": ["China", "United States", "European Union", "India", "Germany", "Brazil"],
+            "TECHNOLOGY": ["Solar PV", "Wind Turbines", "Battery Storage", "Green Hydrogen", "Carbon Capture"],
+        },
+        "key_phrases": [
+            "renewable energy transition",
+            "solar photovoltaic capacity",
+            "grid-scale battery storage",
+            "carbon dioxide emissions",
+            "clean energy investment",
+            "fossil fuel phase-out",
+            "green hydrogen economy",
+            "climate policy targets",
+            "energy storage systems",
+            "net-zero commitments",
+        ],
+        "statistics": [
+            "Global solar PV installations exceeded 400 GW in 2024, a 58% increase year-over-year.",
+            "Clean energy investment reached $2 trillion in 2024, double fossil fuel investment.",
+            "Battery storage costs dropped below $100/kWh at utility scale.",
+            "Global CO2 emissions reached a record 37.4 billion tonnes in 2024.",
+            "The EU generated 44% of electricity from renewable sources in 2024.",
+            "China's solar manufacturing capacity reached 1,000 GW annually.",
+        ],
+        "claims": [
+            "According to the IEA World Energy Outlook 2024, renewables will generate over 50% of global electricity by 2030 under current policies.",
+            "Research published in Nature Energy found that solar power is now the cheapest source of electricity in history in most regions.",
+            "The IPCC Sixth Assessment Report concluded that limiting warming to 1.5C requires global emissions to peak before 2025.",
+            "A Stanford study demonstrated that 100% renewable grids are technically feasible in 145 countries using existing technology.",
+        ],
+        "consensus_points": [
+            "Multiple sources agree: solar PV is now the cheapest electricity source in most markets worldwide.",
+            "Broad consensus that battery storage is the key enabler for high-renewable grids.",
+            "Sources consistently report that current climate pledges are insufficient for the 1.5C target.",
+        ],
+        "conflict_points": [
+            "Unique to IEA: optimistic projection that fossil fuel demand peaks in 2024-2025 vs. OPEC forecasts of continued growth.",
+            "Unique to industry reports: carbon capture viability debated between environmental groups and fossil fuel industry.",
+        ],
+        "sources": [
+            {
+                "url": "https://www.iea.org/reports/world-energy-outlook-2024",
+                "title": "IEA World Energy Outlook 2024",
+                "credibility_score": 0.93,
+                "credibility_rating": "High",
+                "word_count": 15200,
+                "snippet": "Comprehensive analysis of global energy trends and projections...",
+            },
+            {
+                "url": "https://www.nature.com/articles/s41560-024-solar-costs",
+                "title": "Global Solar Cost Trajectories and Grid Parity Analysis",
+                "credibility_score": 0.95,
+                "credibility_rating": "High",
+                "word_count": 8900,
+                "snippet": "Peer-reviewed analysis of solar PV levelized costs across global markets...",
+            },
+            {
+                "url": "https://www.ipcc.ch/report/ar6/wg3/",
+                "title": "IPCC AR6 Working Group III: Mitigation of Climate Change",
+                "credibility_score": 0.96,
+                "credibility_rating": "High",
+                "word_count": 22000,
+                "snippet": "Assessment of climate change mitigation pathways and technologies...",
+            },
+            {
+                "url": "https://www.irena.org/publications/2024/renewable-capacity-statistics",
+                "title": "IRENA Renewable Capacity Statistics 2024",
+                "credibility_score": 0.91,
+                "credibility_rating": "High",
+                "word_count": 6800,
+                "snippet": "Global renewable energy capacity data and deployment trends...",
+            },
+            {
+                "url": "https://arxiv.org/abs/2024.grid-storage-review",
+                "title": "Grid-Scale Energy Storage: Technology Review and Cost Analysis",
+                "credibility_score": 0.87,
+                "credibility_rating": "High",
+                "word_count": 7100,
+                "snippet": "Technical review of battery storage technologies for renewable integration...",
+            },
+            {
+                "url": "https://www.reuters.com/business/energy/renewable-investment-2024",
+                "title": "Reuters: Global Clean Energy Investment Hits Record $2 Trillion",
+                "credibility_score": 0.85,
+                "credibility_rating": "High",
+                "word_count": 2800,
+                "snippet": "Analysis of clean energy investment flows and market trends in 2024...",
+            },
+        ],
+    },
 }
 
 

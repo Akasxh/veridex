@@ -26,18 +26,131 @@ st.set_page_config(
 # Custom CSS for a polished look
 st.markdown("""
 <style>
+    /* Hide Streamlit defaults */
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header[data-testid="stHeader"] {background: transparent;}
+
     .stApp { max-width: 1200px; margin: 0 auto; }
-    div[data-testid="stMetric"] {
-        background-color: #f0f2f6;
-        border-radius: 8px;
-        padding: 12px 16px;
+
+    /* Sidebar gradient */
+    section[data-testid="stSidebar"] {
+        background: linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
     }
-    .hero-title { font-size: 2.5rem; font-weight: 700; margin-bottom: 0; }
-    .hero-subtitle { font-size: 1.1rem; color: #666; margin-top: 4px; }
-    .tag { display: inline-block; background: #e8f0fe; color: #1a73e8; padding: 2px 10px;
-           border-radius: 12px; font-size: 0.85rem; margin: 2px 4px; }
+    section[data-testid="stSidebar"] * {
+        color: #e0e0e0 !important;
+    }
+    section[data-testid="stSidebar"] .stSelectbox label,
+    section[data-testid="stSidebar"] .stSlider label,
+    section[data-testid="stSidebar"] .stMultiSelect label {
+        color: #a0c4ff !important;
+        font-weight: 600;
+    }
+
+    /* Metric cards */
+    div[data-testid="stMetric"] {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 12px;
+        padding: 16px 20px;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+    div[data-testid="stMetric"] label { color: rgba(255,255,255,0.85) !important; font-size: 0.85rem; }
+    div[data-testid="stMetric"] [data-testid="stMetricValue"] { color: #fff !important; font-weight: 700; }
+
+    /* Hero styling */
+    .hero-title {
+        font-size: 2.8rem;
+        font-weight: 800;
+        margin-bottom: 0;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    .hero-subtitle { font-size: 1.15rem; color: #666; margin-top: 4px; line-height: 1.5; }
+
+    /* Feature tags */
+    .tag {
+        display: inline-block;
+        background: linear-gradient(135deg, #e8f0fe, #f0e6ff);
+        color: #4a3aad;
+        padding: 4px 14px;
+        border-radius: 16px;
+        font-size: 0.85rem;
+        margin: 3px 4px;
+        font-weight: 500;
+        border: 1px solid rgba(102, 126, 234, 0.2);
+    }
+
+    /* Credibility badges */
+    .cred-badge {
+        display: inline-block;
+        padding: 3px 12px;
+        border-radius: 12px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+    }
+    .cred-high { background: #d4edda; color: #155724; border: 1px solid #28a745; }
+    .cred-medium { background: #fff3cd; color: #856404; border: 1px solid #ffc107; }
+    .cred-low { background: #f8d7da; color: #721c24; border: 1px solid #dc3545; }
+
+    /* Source cards */
+    .source-card {
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 16px 20px;
+        margin: 8px 0;
+        border-left: 4px solid #667eea;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .source-card-high { border-left-color: #28a745; }
+    .source-card-medium { border-left-color: #ffc107; }
+    .source-card-low { border-left-color: #dc3545; }
+    .source-card h4 { margin: 0 0 6px 0; font-size: 1rem; }
+    .source-card .meta { color: #666; font-size: 0.85rem; }
+
+    /* Stat cards */
+    .stat-card {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border-radius: 10px;
+        padding: 12px 16px;
+        margin: 6px 0;
+        border-left: 3px solid #667eea;
+        font-size: 0.95rem;
+    }
+
+    /* Tabs styling */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 8px;
+    }
+    .stTabs [data-baseweb="tab"] {
+        border-radius: 8px 8px 0 0;
+        padding: 8px 20px;
+        font-weight: 600;
+    }
 </style>
 """, unsafe_allow_html=True)
+
+
+def _cred_badge(rating: str, score: float) -> str:
+    """Generate HTML for a credibility badge."""
+    css_class = {"High": "cred-high", "Medium": "cred-medium", "Low": "cred-low"}.get(rating, "cred-medium")
+    return f'<span class="cred-badge {css_class}">{rating} {score:.0%}</span>'
+
+
+def _source_card_html(title: str, url: str, rating: str, score: float, word_count: int, snippet: str = "") -> str:
+    """Generate HTML for a source card with credibility indicator."""
+    css_class = {"High": "source-card-high", "Medium": "source-card-medium", "Low": "source-card-low"}.get(rating, "")
+    badge = _cred_badge(rating, score)
+    snippet_html = f'<p style="margin:4px 0 0;color:#555;font-size:0.9rem;">{snippet}</p>' if snippet else ""
+    return (
+        f'<div class="source-card {css_class}">'
+        f'<h4><a href="{url}" target="_blank" style="color:#1a1a2e;text-decoration:none;">{title}</a></h4>'
+        f'<span class="meta">{badge} &nbsp; {word_count:,} words</span>'
+        f'{snippet_html}'
+        f'</div>'
+    )
 
 
 @st.cache_resource
@@ -95,7 +208,7 @@ def main() -> None:
         records = agent.storage.get_history(limit=10)
         if records:
             for r in records:
-                with st.expander(f"{r.query[:40]}... ({r.created_at[:10]})"):
+                with st.expander(f"{r.query[:40]}{'...' if len(r.query) > 40 else ''} ({r.created_at[:10]})"):
                     st.write(f"**Sources:** {r.num_sources}")
                     st.write(f"**Date:** {r.created_at[:19]}")
                     if r.summary:
@@ -135,7 +248,7 @@ def main() -> None:
 
 def _render_demo(data: dict) -> None:
     """Render pre-cached demo results."""
-    st.info(f"🎯 **Demo Mode** -- Showing pre-cached results for: *{data['query']}*")
+    st.info(f"**Demo Mode** -- Showing pre-cached results for: *{data['query']}*")
 
     # Metrics row
     cols = st.columns(4)
@@ -161,7 +274,7 @@ def _render_demo(data: dict) -> None:
         if data.get("statistics"):
             st.subheader("Statistics & Data Points")
             for stat in data["statistics"]:
-                st.markdown(f"- {stat}")
+                st.markdown(f'<div class="stat-card">{stat}</div>', unsafe_allow_html=True)
 
         if data.get("claims"):
             st.subheader("Notable Claims")
@@ -194,13 +307,18 @@ def _render_demo(data: dict) -> None:
                 st.warning(point)
 
         st.subheader("Sources")
-        for i, src in enumerate(data["sources"], 1):
-            with st.expander(f"{i}. [{src['credibility_rating']}] {src['title'][:60]}"):
-                st.markdown(f"**URL:** [{src['url']}]({src['url']})")
-                st.markdown(f"**Credibility:** {src['credibility_score']:.0%} ({src['credibility_rating']})")
-                st.markdown(f"**Word Count:** {src['word_count']}")
-                if src.get("snippet"):
-                    st.markdown(f"**Snippet:** {src['snippet']}")
+        for src in data["sources"]:
+            st.markdown(
+                _source_card_html(
+                    title=src["title"],
+                    url=src["url"],
+                    rating=src["credibility_rating"],
+                    score=src["credibility_score"],
+                    word_count=src["word_count"],
+                    snippet=src.get("snippet", ""),
+                ),
+                unsafe_allow_html=True,
+            )
 
 
 def _run_research(
@@ -247,7 +365,7 @@ def _run_research(
         if result.statistics:
             st.subheader("Statistics & Data Points")
             for stat in result.statistics:
-                st.markdown(f"- {stat}")
+                st.markdown(f'<div class="stat-card">{stat}</div>', unsafe_allow_html=True)
 
         if result.claims:
             st.subheader("Notable Claims")
@@ -285,14 +403,19 @@ def _run_research(
                 st.warning(point)
 
         st.subheader("Sources")
-        for i, src in enumerate(result.sources, 1):
+        for src in result.sources:
             title = src.page.title if src.page else src.search_result.title
-            with st.expander(f"{i}. [{src.credibility_rating}] {title[:60]}"):
-                st.markdown(f"**URL:** [{src.search_result.url}]({src.search_result.url})")
-                st.markdown(f"**Credibility:** {src.credibility_score:.0%} ({src.credibility_rating})")
-                st.markdown(f"**Word Count:** {src.page.word_count if src.page else 'N/A'}")
-                if src.search_result.snippet:
-                    st.markdown(f"**Snippet:** {src.search_result.snippet}")
+            st.markdown(
+                _source_card_html(
+                    title=title,
+                    url=src.search_result.url,
+                    rating=src.credibility_rating,
+                    score=src.credibility_score,
+                    word_count=src.page.word_count if src.page else 0,
+                    snippet=src.search_result.snippet,
+                ),
+                unsafe_allow_html=True,
+            )
 
     with tabs[3]:
         if result.report_data:
