@@ -1,6 +1,12 @@
-# ResearchBot -- AI Web Research Agent
+# 🔬 ResearchBot -- AI Web Research Agent
 
-An autonomous web research agent that searches, scrapes, summarizes, and synthesizes information from multiple web sources into structured research reports. **No paid API keys required** -- uses DuckDuckGo search and local NLP.
+[![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Built with spaCy](https://img.shields.io/badge/built%20with-spaCy-09a3d5.svg)](https://spacy.io)
+[![Streamlit](https://img.shields.io/badge/UI-Streamlit-ff4b4b.svg)](https://streamlit.io)
+[![No API Keys](https://img.shields.io/badge/API%20Keys-None%20Required-brightgreen.svg)]()
+
+> Autonomous web research agent that searches, scrapes, summarizes, and synthesizes information from multiple web sources into structured reports. **Zero API keys required** -- powered by DuckDuckGo search and local NLP.
 
 ## Features
 
@@ -13,11 +19,14 @@ An autonomous web research agent that searches, scrapes, summarizes, and synthes
 - **Multiple Export Formats** -- Markdown, PDF, and JSON reports with citations
 - **Research History** -- SQLite-backed session tracking and search
 - **Dual Interface** -- CLI for automation, Streamlit for interactive use
+- **Demo Mode** -- Pre-cached results for instant presentations without network
 
 ## Quick Start
 
 ```bash
-# Install dependencies
+# Clone and install
+git clone https://github.com/akash/researchbot.git
+cd researchbot
 uv sync
 
 # Download spaCy model (first run only)
@@ -29,12 +38,53 @@ uv run python src/cli.py "climate change mitigation strategies" -n 10 -f markdow
 
 # Web interface
 uv run streamlit run src/app.py
+
+# Demo mode (no network needed -- perfect for presentations)
+uv run python src/cli.py --demo
+uv run python src/cli.py --demo "Impact of AI on healthcare"
+uv run python src/cli.py --list-demos
 ```
+
+## Architecture
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                    ResearchBot Agent                     │
+│                     (agent.py)                          │
+├──────────┬──────────┬───────────┬──────────┬────────────┤
+│  Search  │ Scraper  │ Extractor │ Summarize│ Credibility│
+│(search.py│(scraper. │(extractor.│(summarize│(credibilit │
+│)         │py)       │py)        │r.py)     │y.py)       │
+├──────────┴──────────┴───────────┴──────────┴────────────┤
+│  Report Generator (report.py)  │  Storage (storage.py)  │
+├────────────────────────────────┴────────────────────────┤
+│        CLI (cli.py)        │     Streamlit (app.py)     │
+└────────────────────────────┴────────────────────────────┘
+```
+
+### Pipeline Flow
+
+```
+Query → [DuckDuckGo Search] → [Web Scraping] → [NLP Analysis] → [Credibility Scoring]
+                                                       ↓
+       [SQLite History] ← [Report Gen] ← [Multi-Source Synthesis] ← [TF-IDF Summarization]
+```
+
+1. **Search** -- Query DuckDuckGo for relevant web pages
+2. **Scrape** -- Fetch and parse HTML, extract clean text (robots.txt aware)
+3. **Analyze** -- Extract entities, key phrases, statistics, and claims (spaCy)
+4. **Score** -- Evaluate source credibility using domain heuristics
+5. **Summarize** -- TF-IDF TextRank extractive summarization across documents
+6. **Compare** -- Detect consensus and conflicts between sources
+7. **Report** -- Generate structured report with citations (MD/PDF/JSON)
+8. **Store** -- Save session to SQLite history
 
 ## CLI Options
 
 ```
-usage: researchbot [-h] [-n NUM_SOURCES] [-f {markdown,pdf,json} ...] [--history] [--search-history QUERY] query
+usage: researchbot [-h] [-n NUM_SOURCES] [-f {markdown,pdf,json} ...]
+                   [--history] [--search-history QUERY]
+                   [--demo] [--list-demos] [query]
 
 positional arguments:
   query                 Research query/topic
@@ -44,34 +94,9 @@ options:
   -f, --format          Export formats: markdown, pdf, json (default: markdown)
   --history             Show research history
   --search-history      Search past research sessions
+  --demo                Run with pre-cached demo results (no network)
+  --list-demos          List available demo queries
 ```
-
-## Architecture
-
-```
-src/
-  agent.py       -- Research pipeline orchestrator
-  search.py      -- DuckDuckGo search wrapper with rate limiting
-  scraper.py     -- Web scraping with robots.txt compliance
-  summarizer.py  -- TF-IDF TextRank extractive summarization
-  extractor.py   -- spaCy NLP fact extraction
-  credibility.py -- Source credibility scoring engine
-  report.py      -- Multi-format report generation (MD/PDF/JSON)
-  storage.py     -- SQLite research history
-  cli.py         -- Command-line interface
-  app.py         -- Streamlit web interface
-```
-
-### Pipeline
-
-1. **Search** -- Query DuckDuckGo for relevant web pages
-2. **Scrape** -- Fetch and parse HTML, extract clean text (robots.txt aware)
-3. **Analyze** -- Extract entities, key phrases, statistics, and claims
-4. **Score** -- Evaluate source credibility using domain heuristics
-5. **Summarize** -- TF-IDF TextRank extractive summarization across documents
-6. **Compare** -- Detect consensus and conflicts between sources
-7. **Report** -- Generate structured report with citations
-8. **Store** -- Save session to SQLite history
 
 ## Tech Stack
 
@@ -95,6 +120,23 @@ ResearchBot is designed for respectful web access:
 - Identifies itself via User-Agent string
 - Limits content size (5MB max)
 - Only processes HTML content
+
+## Project Structure
+
+```
+src/
+  agent.py       -- Research pipeline orchestrator
+  search.py      -- DuckDuckGo search wrapper with rate limiting
+  scraper.py     -- Web scraping with robots.txt compliance
+  summarizer.py  -- TF-IDF TextRank extractive summarization
+  extractor.py   -- spaCy NLP fact extraction
+  credibility.py -- Source credibility scoring engine
+  report.py      -- Multi-format report generation (MD/PDF/JSON)
+  storage.py     -- SQLite research history
+  demo.py        -- Pre-cached demo results
+  cli.py         -- Command-line interface
+  app.py         -- Streamlit web interface
+```
 
 ## Reports
 

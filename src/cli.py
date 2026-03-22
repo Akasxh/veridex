@@ -5,7 +5,12 @@ from __future__ import annotations
 import argparse
 import sys
 
-from src.agent import ResearchAgent
+try:
+    from src.agent import ResearchAgent
+    from src.demo import get_demo_queries, get_demo_result
+except ImportError:
+    from agent import ResearchAgent  # type: ignore[no-redef]
+    from demo import get_demo_queries, get_demo_result  # type: ignore[no-redef]
 
 
 def main() -> None:
@@ -22,10 +27,26 @@ def main() -> None:
     )
     parser.add_argument("--history", action="store_true", help="Show research history")
     parser.add_argument("--search-history", type=str, help="Search past research sessions")
+    parser.add_argument("--demo", action="store_true", help="Run with pre-cached demo results (no network)")
+    parser.add_argument("--list-demos", action="store_true", help="List available demo queries")
 
     args = parser.parse_args()
 
+    if args.list_demos:
+        print("\n=== Available Demo Queries ===\n")
+        for q in get_demo_queries():
+            print(f"  - {q}")
+        print(f"\nUsage: researchbot --demo \"{get_demo_queries()[0]}\"")
+        return
+
     agent = ResearchAgent()
+
+    if args.demo:
+        if not args.query:
+            # Pick first demo query
+            args.query = get_demo_queries()[0]
+        _run_demo(args.query)
+        return
 
     if args.history:
         _show_history(agent)
@@ -138,6 +159,57 @@ def _run_research(agent: ResearchAgent, query: str, max_sources: int, formats: l
         for fmt, path in paths.items():
             print(f"  {fmt}: {path}")
         print()
+
+
+def _run_demo(query: str) -> None:
+    """Display pre-cached demo results without network access."""
+    data = get_demo_result(query)
+    if not data:
+        print(f"  No demo data for: {query}")
+        print(f"  Available: {', '.join(get_demo_queries())}")
+        return
+
+    print(f"\n{'='*60}")
+    print(f"  ResearchBot [DEMO] -- {data['query']}")
+    print(f"{'='*60}\n")
+
+    print(f"  Sources analyzed: {len(data['sources'])}\n")
+    print("  === SUMMARY ===\n")
+    print(f"  {data['summary']}\n")
+
+    if data.get("key_sentences"):
+        print("  === KEY FINDINGS ===\n")
+        for i, s in enumerate(data["key_sentences"][:5], 1):
+            print(f"  {i}. {s}")
+        print()
+
+    if data.get("key_phrases"):
+        print("  === KEY TOPICS ===\n")
+        print(f"  {', '.join(data['key_phrases'][:10])}\n")
+
+    if data.get("statistics"):
+        print("  === STATISTICS ===\n")
+        for stat in data["statistics"][:5]:
+            print(f"  - {stat}")
+        print()
+
+    if data.get("consensus_points"):
+        print("  === SOURCE CONSENSUS ===\n")
+        for p in data["consensus_points"]:
+            print(f"  + {p}")
+        print()
+
+    if data.get("conflict_points"):
+        print("  === CONFLICTING INFORMATION ===\n")
+        for p in data["conflict_points"]:
+            print(f"  ! {p}")
+        print()
+
+    print("  === SOURCES ===\n")
+    for i, src in enumerate(data["sources"], 1):
+        print(f"  {i}. [{src['credibility_rating']}] {src['title'][:50]}")
+        print(f"     {src['url']}")
+    print()
 
 
 if __name__ == "__main__":

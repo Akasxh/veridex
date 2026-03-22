@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 import sqlite3
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -55,16 +55,23 @@ class Storage:
     """SQLite-backed research history."""
 
     db_path: Path = _DEFAULT_DB
+    _persistent_conn: sqlite3.Connection | None = field(default=None, init=False, repr=False)
 
     def __post_init__(self) -> None:
         if isinstance(self.db_path, str):
-            self.db_path = Path(self.db_path)
-        if str(self.db_path) != ":memory:":
+            if self.db_path == ":memory:":
+                # Keep a persistent connection for :memory: databases
+                self._persistent_conn = sqlite3.connect(":memory:")
+            else:
+                self.db_path = Path(self.db_path)
+        if isinstance(self.db_path, Path):
             self.db_path.parent.mkdir(parents=True, exist_ok=True)
         with self._connect() as conn:
             conn.executescript(_SCHEMA)
 
     def _connect(self) -> sqlite3.Connection:
+        if self._persistent_conn is not None:
+            return self._persistent_conn
         return sqlite3.connect(str(self.db_path))
 
     def save_session(

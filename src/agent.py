@@ -6,13 +6,22 @@ import re
 from dataclasses import dataclass, field
 from typing import Any
 
-from src.credibility import CredibilityScorer
-from src.extractor import ExtractedFacts, FactExtractor
-from src.report import ReportData, ReportGenerator, SourceInfo
-from src.scraper import ScrapedPage, WebScraper
-from src.search import SearchEngine, SearchResult
-from src.storage import Storage
-from src.summarizer import Summarizer
+try:
+    from src.credibility import CredibilityScorer
+    from src.extractor import ExtractedFacts, FactExtractor
+    from src.report import ReportData, ReportGenerator, SourceInfo
+    from src.scraper import ScrapedPage, WebScraper
+    from src.search import SearchEngine, SearchResult
+    from src.storage import Storage
+    from src.summarizer import Summarizer
+except ImportError:
+    from credibility import CredibilityScorer  # type: ignore[no-redef]
+    from extractor import ExtractedFacts, FactExtractor  # type: ignore[no-redef]
+    from report import ReportData, ReportGenerator, SourceInfo  # type: ignore[no-redef]
+    from scraper import ScrapedPage, WebScraper  # type: ignore[no-redef]
+    from search import SearchEngine, SearchResult  # type: ignore[no-redef]
+    from storage import Storage  # type: ignore[no-redef]
+    from summarizer import Summarizer  # type: ignore[no-redef]
 
 
 @dataclass
