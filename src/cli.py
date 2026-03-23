@@ -3,7 +3,10 @@
 from __future__ import annotations
 
 import argparse
+import logging
 import sys
+
+logger = logging.getLogger(__name__)
 
 try:
     from src.agent import ResearchAgent

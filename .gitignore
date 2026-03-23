@@ -1,29 +1,100 @@
+# Python bytecode
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
+*.pyo
+*.pyd
 .Python
+
+# Distribution / packaging
 build/
 dist/
 *.egg-info/
+*.egg
 .eggs/
+develop-eggs/
+downloads/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+
+# Virtual environments
 .venv/
 venv/
 ENV/
+env/
+
+# Environment files
 .env
+.env.local
+.env.*.local
 *.env.local
+
+# Testing
 .pytest_cache/
 .coverage
+.coverage.*
 htmlcov/
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.tox/
+.nox/
+
+# Type checking / linting
 .mypy_cache/
 .ruff_cache/
-*.db
-*.sqlite3
-.DS_Store
-Thumbs.db
+.pytype/
+
+# IDE files
 .idea/
 .vscode/
+*.sublime-project
+*.sublime-workspace
 *.swp
 *.swo
 *~
-uv.lock
+
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
+._*
+
+# Database
+*.db
+*.sqlite3
+
+# Logs
+*.log
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Streamlit
+.streamlit/
+
+# Research output
+.researchbot/
+research_output/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Documentation build
+docs/_build/
+
+# Swarm orchestration
+.swarm/
+
+# Temp files
+*.tmp
+*.bak
+*.orig

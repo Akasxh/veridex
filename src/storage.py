@@ -3,11 +3,14 @@
 from __future__ import annotations
 
 import json
+import logging
 import sqlite3
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+
+logger = logging.getLogger(__name__)
 
 _DEFAULT_DB = Path.home() / ".researchbot" / "history.db"
 
@@ -163,6 +166,19 @@ class Storage:
                 summary=r[4] or "", report_path=r[5] or "",
                 metadata=json.loads(r[6]) if r[6] else {},
             )
+            for r in rows
+        ]
+
+    def get_all_sources(self) -> list[dict]:
+        """Return all research sources with session info for analytics."""
+        with self._connect() as conn:
+            rows = conn.execute(
+                "SELECT rs.url, rs.title, rs.credibility_score, rs.word_count, s.query, s.created_at "
+                "FROM research_sources rs JOIN research_sessions s ON rs.session_id = s.id "
+                "ORDER BY s.created_at DESC LIMIT 500"
+            ).fetchall()
+        return [
+            {"url": r[0], "title": r[1], "credibility_score": r[2], "word_count": r[3], "query": r[4], "created_at": r[5]}
             for r in rows
         ]
 
