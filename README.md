@@ -1,5 +1,5 @@
 <div align="center">
-  <h1>🔬 ResearchBot</h1>
+  <h1>🔬 Veridex</h1>
   <p><strong>Open-source intelligence analyst that fact-checks the internet in real time.</strong></p>
   <p>
     <img src="https://img.shields.io/badge/python-3.12+-blue?logo=python&logoColor=white" alt="Python 3.12+"/>
@@ -18,12 +18,12 @@
     <a href="#cli-reference">CLI</a> &bull;
     <a href="#docker">Docker</a>
   </p>
-  <img src="./screenshots/hero.png" width="800" alt="ResearchBot Dashboard"/>
+  <img src="./screenshots/hero.png" width="800" alt="Veridex Dashboard"/>
 </div>
 
 ---
 
-ResearchBot is an autonomous web research agent that searches the open web via DuckDuckGo, scrapes pages with robots.txt compliance and rate limiting, extracts structured facts using spaCy NLP, scores source credibility across multiple dimensions, and synthesizes multi-source findings into exportable reports. Every claim is traced back to its source. Every source is scored. Every conflict between sources is surfaced.
+Veridex is an autonomous web research agent that searches the open web via DuckDuckGo, scrapes pages with robots.txt compliance and rate limiting, extracts structured facts using spaCy NLP, scores source credibility across multiple dimensions, and synthesizes multi-source findings into exportable reports. Every claim is traced back to its source. Every source is scored. Every conflict between sources is surfaced.
 
 **No API keys. No LLM. No hallucinations.** All intelligence runs locally using classical NLP -- TF-IDF vectorization, TextRank summarization, named entity recognition, and cross-source verification. Think of it as: *What if Perplexity showed its work?*
 
@@ -188,8 +188,8 @@ sequenceDiagram
 
 ```bash
 # Clone the repository
-git clone https://github.com/akash/researchbot.git
-cd researchbot
+git clone https://github.com/akash/veridex.git
+cd veridex
 
 # Install dependencies + spaCy language model
 uv sync
@@ -227,10 +227,10 @@ make clean     # Remove caches and build artifacts
 
 ```bash
 # Build the image (multi-stage, ~500MB)
-docker build -t researchbot:latest .
+docker build -t veridex:latest .
 
 # Run the container
-docker run --rm -p 8501:8501 --name researchbot researchbot:latest
+docker run --rm -p 8501:8501 --name veridex veridex:latest
 ```
 
 ### Docker Compose (recommended)
@@ -243,7 +243,7 @@ cp .env.example .env
 docker compose up --build -d
 
 # View logs
-docker compose logs -f researchbot
+docker compose logs -f veridex
 
 # Stop
 docker compose down
@@ -252,7 +252,7 @@ docker compose down
 The Docker setup includes:
 - Multi-stage build for minimal image size
 - Non-root `appuser` for security
-- Named volume (`researchbot-data`) for SQLite persistence across restarts
+- Named volume (`veridex-data`) for SQLite persistence across restarts
 - Health check endpoint at `/_stcore/health`
 - Auto-restart policy (`unless-stopped`)
 
@@ -260,7 +260,7 @@ The Docker setup includes:
 
 ## CLI Reference
 
-ResearchBot includes a full CLI for scripting and automation:
+Veridex includes a full CLI for scripting and automation:
 
 ```bash
 # Run a research query
@@ -320,7 +320,7 @@ uv run python src/cli.py --list-demos
 ## Project Structure
 
 ```
-researchbot/
+veridex/
 ├── src/
 │   ├── __init__.py          # Package marker
 │   ├── app.py               # Streamlit multi-page UI (1,397 lines)
@@ -360,15 +360,15 @@ researchbot/
 
 ## Environment Variables
 
-All configuration is optional. ResearchBot works with zero configuration out of the box.
+All configuration is optional. Veridex works with zero configuration out of the box.
 
 | Variable | Description | Default |
 |----------|-------------|---------|
 | `STREAMLIT_SERVER_PORT` | Port for the Streamlit web server | `8501` |
 | `STREAMLIT_SERVER_HEADLESS` | Run without opening browser | `true` |
-| `RESEARCHBOT_MAX_SOURCES` | Maximum sources to scrape per query | `10` |
-| `RESEARCHBOT_RATE_LIMIT_DELAY` | Seconds between scrape requests | `1.0` |
-| `RESEARCHBOT_DB_PATH` | SQLite database file path | `data/research_history.db` |
+| `VERIDEX_MAX_SOURCES` | Maximum sources to scrape per query | `10` |
+| `VERIDEX_RATE_LIMIT_DELAY` | Seconds between scrape requests | `1.0` |
+| `VERIDEX_DB_PATH` | SQLite database file path | `data/research_history.db` |
 | `LOG_LEVEL` | Logging verbosity (`DEBUG`, `INFO`, `WARNING`, `ERROR`) | `INFO` |
 
 Copy the template to get started:
@@ -399,7 +399,7 @@ uv run python -c "from src.agent import ResearchAgent; print('All imports OK')"
 
 ## Responsible Scraping
 
-ResearchBot is designed to be a respectful web citizen:
+Veridex is designed to be a respectful web citizen:
 
 - **robots.txt compliance** -- Every domain's `robots.txt` is fetched and parsed before scraping. Disallowed paths are never accessed.
 - **Rate limiting** -- Configurable delay (default 1 second) between requests to the same domain. No concurrent scraping of a single host.
@@ -412,7 +412,7 @@ ResearchBot is designed to be a respectful web citizen:
 
 ## Why No LLM?
 
-ResearchBot deliberately avoids large language models. Here is why:
+Veridex deliberately avoids large language models. Here is why:
 
 1. **Zero hallucination risk** -- Every sentence in the output traces back to a real source URL. TF-IDF extractive summarization selects actual sentences from actual documents.
 2. **No API keys, no cost, no rate limits** -- Runs fully offline (after initial web search). No OpenAI/Anthropic/Google billing. No vendor lock-in.
@@ -430,6 +430,6 @@ MIT License. See [LICENSE](./LICENSE) for details.
 <div align="center">
   <p>Built with classical NLP, zero API keys, and a healthy skepticism of everything on the internet.</p>
   <p>
-    <a href="#-researchbot">Back to top</a>
+    <a href="#-veridex">Back to top</a>
   </p>
 </div>

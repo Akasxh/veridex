@@ -1,9 +1,9 @@
 services:
-  researchbot:
+  veridex:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: researchbot
+    container_name: veridex
     ports:
       - "${STREAMLIT_SERVER_PORT:-8501}:8501"
     env_file:
@@ -12,7 +12,7 @@ services:
       - STREAMLIT_SERVER_HEADLESS=true
       - STREAMLIT_BROWSER_GATHER_USAGE_STATS=false
     volumes:
-      - researchbot-data:/app/data
+      - veridex-data:/app/data
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8501/_stcore/health')"]
       interval: 30s
@@ -22,5 +22,5 @@ services:
     restart: unless-stopped
 
 volumes:
-  researchbot-data:
+  veridex-data:
     driver: local

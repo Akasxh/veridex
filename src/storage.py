@@ -12,7 +12,7 @@ from typing import Any
 
 logger = logging.getLogger(__name__)
 
-_DEFAULT_DB = Path.home() / ".researchbot" / "history.db"
+_DEFAULT_DB = Path.home() / ".veridex" / "history.db"
 
 _SCHEMA = """
 CREATE TABLE IF NOT EXISTS research_sessions (

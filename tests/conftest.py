@@ -1,4 +1,4 @@
-"""Shared fixtures for ResearchBot test suite."""
+"""Shared fixtures for Veridex test suite."""
 
 from __future__ import annotations
 

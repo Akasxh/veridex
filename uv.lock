@@ -1202,45 +1202,6 @@ wheels = [
 ]
 
 [[package]]
-name = "researchbot"
-version = "1.0.0"
-source = { editable = "." }
-dependencies = [
-    { name = "beautifulsoup4" },
-    { name = "ddgs" },
-    { name = "fpdf2" },
-    { name = "lxml" },
-    { name = "plotly" },
-    { name = "requests" },
-    { name = "scikit-learn" },
-    { name = "spacy" },
-    { name = "streamlit" },
-    { name = "urllib3" },
-]
-
-[package.dev-dependencies]
-dev = [
-    { name = "pytest" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "beautifulsoup4", specifier = ">=4.12.0" },
-    { name = "ddgs", specifier = ">=7.0.0" },
-    { name = "fpdf2", specifier = ">=2.8.0" },
-    { name = "lxml", specifier = ">=5.0.0" },
-    { name = "plotly", specifier = ">=5.18.0" },
-    { name = "requests", specifier = ">=2.32.0" },
-    { name = "scikit-learn", specifier = ">=1.5.0" },
-    { name = "spacy", specifier = ">=3.8.0" },
-    { name = "streamlit", specifier = ">=1.40.0" },
-    { name = "urllib3", specifier = ">=2.0.0" },
-]
-
-[package.metadata.requires-dev]
-dev = [{ name = "pytest", specifier = ">=9.0.2" }]
-
-[[package]]
 name = "rich"
 version = "14.3.3"
 source = { registry = "https://pypi.org/simple" }
@@ -1801,6 +1762,45 @@ sdist = { url = "https://files.pythonhosted.org/packages/c7/24/5f1b3bdffd70275f6
 wheels = [
     { url = "https://files.pythonhosted.org/packages/39/08/aaaad47bc4e9dc8c725e68f9d04865dbcb2052843ff09c97b08904852d84/urllib3-2.6.3-py3-none-any.whl", hash = "sha256:bf272323e553dfb2e87d9bfd225ca7b0f467b919d7bbd355436d3fd37cb0acd4", size = 131584, upload-time = "2026-01-07T16:24:42.685Z" },
 ]
+
+[[package]]
+name = "veridex"
+version = "1.0.0"
+source = { editable = "." }
+dependencies = [
+    { name = "beautifulsoup4" },
+    { name = "ddgs" },
+    { name = "fpdf2" },
+    { name = "lxml" },
+    { name = "plotly" },
+    { name = "requests" },
+    { name = "scikit-learn" },
+    { name = "spacy" },
+    { name = "streamlit" },
+    { name = "urllib3" },
+]
+
+[package.dev-dependencies]
+dev = [
+    { name = "pytest" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "beautifulsoup4", specifier = ">=4.12.0" },
+    { name = "ddgs", specifier = ">=7.0.0" },
+    { name = "fpdf2", specifier = ">=2.8.0" },
+    { name = "lxml", specifier = ">=5.0.0" },
+    { name = "plotly", specifier = ">=5.18.0" },
+    { name = "requests", specifier = ">=2.32.0" },
+    { name = "scikit-learn", specifier = ">=1.5.0" },
+    { name = "spacy", specifier = ">=3.8.0" },
+    { name = "streamlit", specifier = ">=1.40.0" },
+    { name = "urllib3", specifier = ">=2.0.0" },
+]
+
+[package.metadata.requires-dev]
+dev = [{ name = "pytest", specifier = ">=9.0.2" }]
 
 [[package]]
 name = "wasabi"

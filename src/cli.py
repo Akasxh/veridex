@@ -1,4 +1,4 @@
-"""CLI interface for ResearchBot."""
+"""CLI interface for Veridex."""
 
 from __future__ import annotations
 
@@ -18,8 +18,8 @@ except ImportError:
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        prog="researchbot",
-        description="ResearchBot -- AI Web Research Agent. Search, scrape, summarize, and synthesize.",
+        prog="veridex",
+        description="Veridex -- AI Web Research Agent. Search, scrape, summarize, and synthesize.",
     )
     parser.add_argument("query", nargs="?", help="Research query/topic")
     parser.add_argument("-n", "--num-sources", type=int, default=6, help="Max sources to analyze (default: 6)")
@@ -39,7 +39,7 @@ def main() -> None:
         print("\n=== Available Demo Queries ===\n")
         for q in get_demo_queries():
             print(f"  - {q}")
-        print(f"\nUsage: researchbot --demo \"{get_demo_queries()[0]}\"")
+        print(f"\nUsage: veridex --demo \"{get_demo_queries()[0]}\"")
         return
 
     agent = ResearchAgent()
@@ -94,7 +94,7 @@ def _search_history(agent: ResearchAgent, query: str) -> None:
 
 def _run_research(agent: ResearchAgent, query: str, max_sources: int, formats: list[str]) -> None:
     print(f"\n{'='*60}")
-    print(f"  ResearchBot -- Researching: {query}")
+    print(f"  Veridex -- Researching: {query}")
     print(f"{'='*60}\n")
 
     def progress(msg: str, pct: float) -> None:
@@ -173,7 +173,7 @@ def _run_demo(query: str) -> None:
         return
 
     print(f"\n{'='*60}")
-    print(f"  ResearchBot [DEMO] -- {data['query']}")
+    print(f"  Veridex [DEMO] -- {data['query']}")
     print(f"{'='*60}\n")
 
     print(f"  Sources analyzed: {len(data['sources'])}\n")

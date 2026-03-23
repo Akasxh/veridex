@@ -40,11 +40,11 @@ clean: ## Remove caches, bytecode, and build artifacts
 # ── Docker ─────────────────────────────────────────────
 .PHONY: docker-build
 docker-build: ## Build Docker image
-	docker build -t researchbot:latest .
+	docker build -t veridex:latest .
 
 .PHONY: docker-run
 docker-run: ## Run Docker container (port 8501)
-	docker run --rm -p 8501:8501 --name researchbot researchbot:latest
+	docker run --rm -p 8501:8501 --name veridex veridex:latest
 
 .PHONY: docker-compose-up
 docker-compose-up: ## Start services with docker-compose

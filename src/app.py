@@ -1,4 +1,4 @@
-"""ResearchBot — Multi-page Streamlit web interface."""
+"""Veridex — Multi-page Streamlit web interface."""
 
 from __future__ import annotations
 
@@ -22,12 +22,12 @@ except ImportError:
 # Page config
 # ---------------------------------------------------------------------------
 st.set_page_config(
-    page_title="ResearchBot - AI Web Research Agent",
+    page_title="Veridex - AI Web Research Agent",
     page_icon="🔬",
     layout="wide",
     initial_sidebar_state="expanded",
     menu_items={
-        "About": "ResearchBot - Autonomous web research with NLP. No API keys required.",
+        "About": "Veridex - Autonomous web research with NLP. No API keys required.",
     },
 )
 
@@ -627,7 +627,7 @@ def render_sidebar_brand() -> None:
     st.markdown(
         '<div class="sidebar-brand">'
         '<span class="sidebar-brand__icon">🔬</span>'
-        '<span class="sidebar-brand__text">ResearchBot</span>'
+        '<span class="sidebar-brand__text">Veridex</span>'
         '<span class="sidebar-brand__version">v1.0</span></div>',
         unsafe_allow_html=True,
     )
@@ -655,7 +655,7 @@ def render_sidebar_demo() -> None:
 
 def render_sidebar_footer() -> None:
     st.markdown(
-        '<div class="sidebar-footer">Built with Streamlit + spaCy<br>ResearchBot v1.0</div>',
+        '<div class="sidebar-footer">Built with Streamlit + spaCy<br>Veridex v1.0</div>',
         unsafe_allow_html=True,
     )
 
@@ -858,7 +858,7 @@ def _render_claim_verification(claims: list[str], sources_data: list[dict[str, A
 
 
 def page_dashboard(agent: ResearchAgent) -> None:
-    st.markdown('<p class="hero-title">ResearchBot</p>', unsafe_allow_html=True)
+    st.markdown('<p class="hero-title">Veridex</p>', unsafe_allow_html=True)
     st.markdown(
         '<p class="hero-subtitle">Autonomous web research agent &mdash; search, scrape, analyze, '
         "and synthesize from multiple sources. No API keys required.</p>",
@@ -1339,7 +1339,7 @@ def page_analytics(agent: ResearchAgent) -> None:
 
 
 def page_about(agent: ResearchAgent) -> None:
-    st.markdown('<p class="hero-title">About ResearchBot</p>', unsafe_allow_html=True)
+    st.markdown('<p class="hero-title">About Veridex</p>', unsafe_allow_html=True)
     st.markdown(
         '<p class="hero-subtitle">An autonomous web research agent built for hackathon P4. '
         "Zero API keys. Full pipeline transparency. Local NLP.</p>",
@@ -1427,7 +1427,7 @@ digraph G {
             st.markdown(f"- {f}")
 
     st.divider()
-    st.caption("Built for P4 Hackathon | ResearchBot v1.0")
+    st.caption("Built for P4 Hackathon | Veridex v1.0")
 
 
 # ---------------------------------------------------------------------------

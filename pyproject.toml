@@ -1,5 +1,5 @@
 [project]
-name = "researchbot"
+name = "veridex"
 version = "1.0.0"
 description = "AI Web Research Agent - autonomous search, scrape, summarize, and synthesize from multiple web sources"
 readme = "README.md"
@@ -32,7 +32,7 @@ dependencies = [
 ]
 
 [project.scripts]
-researchbot = "src.cli:main"
+veridex = "src.cli:main"
 
 [build-system]
 requires = ["hatchling"]

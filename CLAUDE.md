@@ -1,4 +1,4 @@
-# ResearchBot -- AI Web Research Agent
+# Veridex -- AI Web Research Agent
 
 Autonomous web research agent that searches DuckDuckGo, scrapes pages (robots.txt aware, rate-limited), extracts facts via spaCy NLP, scores source credibility across multiple dimensions, and synthesizes multi-source findings into structured reports. Multi-page Streamlit dashboard with Plotly analytics, source radar charts, and claim verification matrix. Supports Markdown, PDF, and JSON export with citations. SQLite-backed research history. Demo mode included for offline presentations. Zero API keys required -- all ML runs locally.
 
@@ -13,8 +13,8 @@ Opens at http://localhost:8501. Demo mode works without network access.
 ### Docker
 
 ```bash
-docker build -t researchbot:latest .
-docker run --rm -p 8501:8501 researchbot:latest
+docker build -t veridex:latest .
+docker run --rm -p 8501:8501 veridex:latest
 ```
 
 Or with Compose: `docker compose up --build -d`
