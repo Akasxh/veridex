@@ -188,7 +188,7 @@ sequenceDiagram
 
 ```bash
 # Clone the repository
-git clone https://github.com/akash/veridex.git
+git clone https://github.com/Akasxh/veridex.git
 cd veridex
 
 # Install dependencies + spaCy language model
