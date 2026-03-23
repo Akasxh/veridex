@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 import time
 from dataclasses import dataclass, field
 from typing import Any
@@ -10,6 +11,8 @@ from urllib.robotparser import RobotFileParser
 
 import requests
 from bs4 import BeautifulSoup, Tag
+
+logger = logging.getLogger(__name__)
 
 _HEADERS = {
     "User-Agent": (
@@ -56,8 +59,8 @@ class WebScraper:
             rp.set_url(f"{base}/robots.txt")
             try:
                 rp.read()
-            except Exception:
-                pass  # If we can't read robots.txt, allow access
+            except (OSError, UnicodeDecodeError) as e:
+                logger.debug("Could not read robots.txt for %s: %s", base, e)
             self._robots_cache[base] = rp
         return self._robots_cache[base]
 
@@ -65,7 +68,8 @@ class WebScraper:
         rp = self._get_robots_parser(url)
         try:
             return rp.can_fetch(_HEADERS["User-Agent"], url)
-        except Exception:
+        except (AttributeError, KeyError, TypeError) as e:
+            logger.debug("robots.txt check failed for %s: %s", url, e)
             return True
 
     def _rate_limit(self, url: str) -> None:

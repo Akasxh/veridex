@@ -2,9 +2,12 @@
 
 from __future__ import annotations
 
+import logging
 import re
 from dataclasses import dataclass, field
 from typing import Any
+
+logger = logging.getLogger(__name__)
 
 try:
     from src.credibility import CredibilityScorer
@@ -108,7 +111,9 @@ def _detect_consensus_and_conflicts(
     return consensus_points[:5], conflict_points[:5]
 
 
-ProgressCallback = type[None] | Any  # Callable[[str, float], None] or None
+from collections.abc import Callable
+
+ProgressCallback = Callable[[str, float], None] | None
 
 
 @dataclass
@@ -128,7 +133,7 @@ class ResearchAgent:
         self,
         query: str,
         max_sources: int | None = None,
-        progress_cb: Any = None,
+        progress_cb: ProgressCallback = None,
     ) -> ResearchResult:
         """Run full research pipeline on a query."""
         n = max_sources or self.max_sources

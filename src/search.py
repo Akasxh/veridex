@@ -2,15 +2,14 @@
 
 from __future__ import annotations
 
+import logging
 import time
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
 from urllib.parse import urlparse
 
 from ddgs import DDGS
 
-if TYPE_CHECKING:
-    pass
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -56,7 +55,7 @@ class SearchEngine:
                         )
                     )
         except Exception as e:
-            print(f"[search] Error searching for '{query}': {e}")
+            logger.error("Error searching for '%s': %s", query, e)
 
         return results
 
@@ -79,6 +78,6 @@ class SearchEngine:
                         )
                     )
         except Exception as e:
-            print(f"[search] Error searching news for '{query}': {e}")
+            logger.error("Error searching news for '%s': %s", query, e)
 
         return results
