@@ -139,7 +139,7 @@ class ResearchAgent:
     """Orchestrates the full research pipeline."""
 
     max_sources: int = 8
-    search_engine: SearchEngine = field(default_factory=SearchEngine)
+    search_engine: SearchEngine | TavilySearchEngine = field(default_factory=SearchEngine)
     scraper: WebScraper = field(default_factory=WebScraper)
     summarizer: Summarizer = field(default_factory=Summarizer)
     extractor: FactExtractor = field(default_factory=FactExtractor)

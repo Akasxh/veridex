@@ -6,6 +6,7 @@ import logging
 import os
 import time
 from dataclasses import dataclass, field
+from typing import Any
 from urllib.parse import urlparse
 
 from ddgs import DDGS
@@ -91,7 +92,7 @@ class TavilySearchEngine:
     max_results: int = 10
     rate_limit_delay: float = 1.5
     _last_request_time: float = field(default=0.0, init=False, repr=False)
-    _client: object = field(default=None, init=False, repr=False)
+    _client: Any = field(default=None, init=False, repr=False)
 
     def __post_init__(self) -> None:
         from tavily import TavilyClient

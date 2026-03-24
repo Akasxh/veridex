@@ -6,10 +6,10 @@ from collections import Counter
 from datetime import datetime, timedelta
 from typing import Any
 
+import os
+
 import plotly.graph_objects as go
 import streamlit as st
-
-import os
 
 try:
     from src.agent import ResearchAgent, ResearchResult, create_search_engine
@@ -555,6 +555,7 @@ section[data-testid="stSidebar"] .stRadio label:hover {
 # ---------------------------------------------------------------------------
 
 
+@st.cache_resource
 def get_agent(provider: str = "duckduckgo") -> ResearchAgent:
     return ResearchAgent(search_engine=create_search_engine(provider))
 
