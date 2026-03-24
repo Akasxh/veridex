@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import os
 import re
 from dataclasses import dataclass, field
 from typing import Any
@@ -124,8 +125,6 @@ def create_search_engine(provider: str = "auto") -> SearchEngine | TavilySearchE
     * ``"auto"`` (default) -- use Tavily when ``TAVILY_API_KEY`` is set,
       otherwise fall back to DuckDuckGo.
     """
-    import os
-
     provider = provider.lower()
     if provider == "tavily" or (provider == "auto" and os.environ.get("TAVILY_API_KEY")):
         logger.info("Using Tavily search engine")

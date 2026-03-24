@@ -98,6 +98,10 @@ class TavilySearchEngine:
         from tavily import TavilyClient
 
         api_key = os.environ.get("TAVILY_API_KEY", "")
+        if not api_key:
+            raise ValueError(
+                "TAVILY_API_KEY environment variable is required when using the Tavily search provider."
+            )
         self._client = TavilyClient(api_key=api_key)
 
     def _wait_for_rate_limit(self) -> None:
