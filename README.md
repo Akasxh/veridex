@@ -1,5 +1,5 @@
 <div align="center">
-  <h1>🔬 Veridex</h1>
+  <h1>Veridex</h1>
   <p><strong>Open-source intelligence analyst that fact-checks the internet in real time.</strong></p>
   <p>
     <img src="https://img.shields.io/badge/python-3.12+-blue?logo=python&logoColor=white" alt="Python 3.12+"/>
@@ -25,31 +25,31 @@
 
 Veridex is an autonomous web research agent that searches the open web via DuckDuckGo, scrapes pages with robots.txt compliance and rate limiting, extracts structured facts using spaCy NLP, scores source credibility across multiple dimensions, and synthesizes multi-source findings into exportable reports. Every claim is traced back to its source. Every source is scored. Every conflict between sources is surfaced.
 
-**No API keys. No LLM. No hallucinations.** All intelligence runs locally using classical NLP -- TF-IDF vectorization, TextRank summarization, named entity recognition, and cross-source verification. Think of it as: *What if Perplexity showed its work?*
+**No API keys. No LLM. No hallucinations.** All intelligence runs locally using classical NLP -- TF-IDF vectorization, TextRank summarization, named entity recognition, and cross-source verification.
 
 ---
 
 ## Features
 
-🔍 **Autonomous Web Search** -- Queries DuckDuckGo and retrieves up to 10+ sources per research topic with automatic deduplication and relevance filtering.
+**Autonomous Web Search** -- Queries DuckDuckGo and retrieves up to 10+ sources per research topic with automatic deduplication and relevance filtering.
 
-🕷️ **Robots.txt-Aware Scraping** -- Respects `robots.txt` directives, enforces rate limiting (configurable delay), and extracts clean text from HTML using BeautifulSoup + lxml.
+**Robots.txt-Aware Scraping** -- Respects `robots.txt` directives, enforces rate limiting (configurable delay), and extracts clean text from HTML using BeautifulSoup + lxml.
 
-🧠 **NLP Fact Extraction** -- spaCy `en_core_web_sm` pipeline extracts named entities (people, organizations, dates, locations), key phrases, statistical claims, and factual assertions from every source.
+**NLP Fact Extraction** -- spaCy `en_core_web_sm` pipeline extracts named entities (people, organizations, dates, locations), key phrases, statistical claims, and factual assertions from every source.
 
-📊 **Multi-Dimensional Credibility Scoring** -- Evaluates sources on domain authority, HTTPS usage, content depth (word count), citation density, and known-source matching. Results displayed as radar charts per source.
+**Multi-Dimensional Credibility Scoring** -- Evaluates sources on domain authority, HTTPS usage, content depth (word count), citation density, and known-source matching. Results displayed as radar charts per source.
 
-🔗 **Cross-Source Verification** -- Compares extracted claims across all sources to identify consensus points (multiple sources agree) and conflicts (unique or contradictory claims). Displayed as a claim verification matrix.
+**Cross-Source Verification** -- Compares extracted claims across all sources to identify consensus points (multiple sources agree) and conflicts (unique or contradictory claims). Displayed as a claim verification matrix.
 
-📈 **Interactive Analytics Dashboard** -- Five Plotly charts: research activity over time, sources per query, credibility distribution (donut chart), top researched topics, and research timeline scatter plot.
+**Interactive Analytics Dashboard** -- Five Plotly charts: research activity over time, sources per query, credibility distribution (donut chart), top researched topics, and research timeline scatter plot.
 
-📑 **Multi-Format Export** -- Generate reports in Markdown, PDF (via FPDF2), or structured JSON with full citations, entity tables, and source credibility breakdowns.
+**Multi-Format Export** -- Generate reports in Markdown, PDF (via FPDF2), or structured JSON with full citations, entity tables, and source credibility breakdowns.
 
-💾 **SQLite Research History** -- Every research session is persisted with full metadata. Search, filter, sort, and re-run past queries from the History page.
+**SQLite Research History** -- Every research session is persisted with full metadata. Search, filter, sort, and re-run past queries from the History page.
 
-🎭 **Offline Demo Mode** -- Three pre-cached research queries (AI in healthcare, quantum computing, climate/renewables) work without network access for presentations and testing.
+**Offline Demo Mode** -- Three pre-cached research queries (AI in healthcare, quantum computing, climate/renewables) work without network access for presentations and testing.
 
-🖥️ **Multi-Page Dashboard** -- Five-page Streamlit app: Dashboard (overview + quick stats), Research (live pipeline), History (past sessions), Analytics (Plotly charts), and About (architecture + tech stack).
+**Multi-Page Dashboard** -- Five-page Streamlit app: Dashboard (overview + quick stats), Research (live pipeline), History (past sessions), Analytics (Plotly charts), and About (architecture + tech stack).
 
 ---
 
@@ -84,28 +84,28 @@ Veridex is an autonomous web research agent that searches the open web via DuckD
 
 ```mermaid
 graph TD
-    subgraph Interface["🖥️ Interface Layer"]
-        UI["Streamlit App<br/>(5 pages, 1397 lines)"]
+    subgraph Interface["Interface Layer"]
+        UI["Streamlit App<br/>(5 pages)"]
         CLI["CLI Interface<br/>(argparse)"]
     end
 
-    subgraph Agent["🤖 Orchestration"]
+    subgraph Agent["Orchestration"]
         RA["ResearchAgent<br/>Pipeline Controller"]
     end
 
-    subgraph Search["🔍 Data Acquisition"]
+    subgraph Search["Data Acquisition"]
         SE["SearchEngine<br/>DuckDuckGo API"]
         WS["WebScraper<br/>robots.txt aware"]
     end
 
-    subgraph Analysis["🧠 NLP Analysis"]
+    subgraph Analysis["NLP Analysis"]
         FE["FactExtractor<br/>spaCy NER + phrases"]
         CS["CredibilityScorer<br/>Multi-dimensional"]
         SUM["Summarizer<br/>TF-IDF TextRank"]
         CDC["Consensus/Conflict<br/>Detection"]
     end
 
-    subgraph Output["📊 Output Layer"]
+    subgraph Output["Output Layer"]
         RG["ReportGenerator<br/>MD / PDF / JSON"]
         ST["SQLite Storage<br/>Research History"]
         PLT["Plotly Charts<br/>Analytics"]
@@ -132,9 +132,7 @@ graph TD
     style Output fill:#16213e,stroke:#6c63ff,color:#e0e0e0
 ```
 
----
-
-## Research Pipeline
+### Research Pipeline
 
 ```mermaid
 sequenceDiagram
@@ -182,24 +180,20 @@ sequenceDiagram
 ### Prerequisites
 
 - **Python 3.12+**
-- **[uv](https://docs.astral.sh/uv/)** -- fast Python package manager (`curl -LsSf https://astral.sh/uv/install.sh | sh`)
+- **[uv](https://docs.astral.sh/uv/)** (`curl -LsSf https://astral.sh/uv/install.sh | sh`)
 
 ### Install and Run
 
 ```bash
-# Clone the repository
 git clone https://github.com/Akasxh/veridex.git
 cd veridex
 
-# Install dependencies + spaCy language model
 uv sync
 uv run python -m spacy download en_core_web_sm
-
-# Start the web app
 uv run streamlit run src/app.py
 ```
 
-The dashboard opens at [http://localhost:8501](http://localhost:8501).
+The dashboard opens at [http://localhost:8501](http://localhost:8501). Demo mode works without network access.
 
 ### One-Liner
 
@@ -212,55 +206,29 @@ uv sync && uv run python -m spacy download en_core_web_sm && uv run streamlit ru
 ```bash
 make install   # Install all dependencies
 make run       # Start Streamlit (port 8501)
-make dev       # Start with hot-reload on file save
+make dev       # Start with hot-reload
 make test      # Run pytest suite
 make lint      # Run ruff linter
-make format    # Auto-format with ruff
-make clean     # Remove caches and build artifacts
 ```
 
 ---
 
 ## Docker
 
-### Build and Run
-
 ```bash
-# Build the image (multi-stage, ~500MB)
 docker build -t veridex:latest .
+docker run --rm -p 8501:8501 veridex:latest
 
-# Run the container
-docker run --rm -p 8501:8501 --name veridex veridex:latest
-```
-
-### Docker Compose (recommended)
-
-```bash
-# Copy environment config
+# Or with Compose (persistent SQLite volume)
 cp .env.example .env
-
-# Start with persistent SQLite volume
 docker compose up --build -d
-
-# View logs
-docker compose logs -f veridex
-
-# Stop
-docker compose down
 ```
 
-The Docker setup includes:
-- Multi-stage build for minimal image size
-- Non-root `appuser` for security
-- Named volume (`veridex-data`) for SQLite persistence across restarts
-- Health check endpoint at `/_stcore/health`
-- Auto-restart policy (`unless-stopped`)
+The Docker setup includes multi-stage build, non-root `appuser`, named volume (`veridex-data`) for SQLite persistence, and health check endpoint.
 
 ---
 
 ## CLI Reference
-
-Veridex includes a full CLI for scripting and automation:
 
 ```bash
 # Run a research query
@@ -272,9 +240,6 @@ uv run python src/cli.py "quantum computing breakthroughs" -n 8 -f markdown pdf 
 # View research history
 uv run python src/cli.py --history
 
-# Search past sessions
-uv run python src/cli.py --search-history "climate"
-
 # Run in demo mode (no network required)
 uv run python src/cli.py --demo "AI healthcare"
 
@@ -282,17 +247,33 @@ uv run python src/cli.py --demo "AI healthcare"
 uv run python src/cli.py --list-demos
 ```
 
-### CLI Options
-
 | Flag | Description | Default |
 |------|-------------|---------|
 | `query` | Research topic (positional) | -- |
-| `-n`, `--num-sources` | Maximum sources to scrape and analyze | `6` |
+| `-n`, `--num-sources` | Maximum sources to scrape | `6` |
 | `-f`, `--format` | Export formats: `markdown`, `pdf`, `json` | `markdown` |
 | `--history` | Display all past research sessions | -- |
-| `--search-history` | Search sessions by keyword | -- |
 | `--demo` | Use pre-cached results (offline) | -- |
-| `--list-demos` | Show available demo queries | -- |
+
+---
+
+## Why No LLM?
+
+1. **Zero hallucination risk** -- Every sentence traces back to a real source URL. TF-IDF extractive summarization selects actual sentences from actual documents.
+2. **No API keys, no cost, no rate limits** -- Runs fully offline after initial web search. No vendor lock-in.
+3. **Full transparency** -- The entire pipeline is inspectable. You can see exactly which sources contributed which facts.
+4. **Reproducibility** -- Same query, same sources, same output. No temperature sampling.
+
+---
+
+## Responsible Scraping
+
+- **robots.txt compliance** -- Every domain's `robots.txt` is fetched and parsed before scraping
+- **Rate limiting** -- Configurable delay (default 1s) between requests to the same domain
+- **User-Agent transparency** -- Identifies itself clearly in HTTP headers
+- **Content-only extraction** -- Strips navigation, ads, scripts, and boilerplate
+- **No login bypass** -- Does not attempt to circumvent paywalls or CAPTCHAs
+- **Local processing only** -- No data sent to external APIs
 
 ---
 
@@ -300,18 +281,17 @@ uv run python src/cli.py --list-demos
 
 | Layer | Technology | Purpose |
 |-------|-----------|---------|
-| **Language** | Python 3.12+ | Type hints, dataclasses, modern syntax |
+| **Language** | Python 3.12+ | Type hints, dataclasses |
 | **Web UI** | Streamlit 1.40+ | Multi-page dashboard with custom CSS |
-| **Charts** | Plotly 5.18+ | Interactive analytics (radar, donut, scatter, bar, line) |
-| **NLP** | spaCy 3.8+ (`en_core_web_sm`) | Named entity recognition, tokenization, POS tagging |
-| **Summarization** | scikit-learn 1.5+ | TF-IDF vectorization + TextRank extractive summarization |
+| **Charts** | Plotly 5.18+ | Interactive analytics (radar, donut, scatter, bar) |
+| **NLP** | spaCy 3.8+ (`en_core_web_sm`) | NER, tokenization, POS tagging |
+| **Summarization** | scikit-learn 1.5+ | TF-IDF + TextRank extractive summarization |
 | **Search** | ddgs 7.0+ | DuckDuckGo search API wrapper |
 | **Scraping** | BeautifulSoup4 + lxml | HTML parsing and clean text extraction |
-| **HTTP** | requests + urllib3 | Web requests with robots.txt compliance |
 | **PDF Export** | FPDF2 2.8+ | PDF report generation with citations |
 | **Database** | SQLite (stdlib) | Research history persistence |
 | **Packaging** | uv + hatchling | Fast dependency resolution and builds |
-| **Linting** | ruff | Linting + formatting (replaces black, isort, flake8) |
+| **Linting** | ruff | Linting + formatting |
 | **Testing** | pytest 9.0+ | Unit and integration tests |
 | **Container** | Docker + Compose | Multi-stage build, health checks, named volumes |
 
@@ -335,46 +315,23 @@ veridex/
 │   ├── storage.py           # SQLite research history
 │   └── demo.py              # Pre-cached demo data for offline use
 ├── tests/
-│   ├── __init__.py
 │   ├── conftest.py          # Shared pytest fixtures
-│   ├── test_credibility.py  # Credibility scorer tests
-│   ├── test_demo.py         # Demo mode tests
-│   ├── test_extractor.py    # NLP extraction tests
-│   ├── test_report.py       # Report generation tests
-│   ├── test_scraper.py      # Web scraper tests
-│   ├── test_search.py       # Search engine tests
-│   ├── test_storage.py      # SQLite storage tests
-│   └── test_summarizer.py   # Summarizer tests
-├── screenshots/             # UI screenshots
+│   ├── test_credibility.py
+│   ├── test_demo.py
+│   ├── test_extractor.py
+│   ├── test_report.py
+│   ├── test_scraper.py
+│   ├── test_search.py
+│   ├── test_storage.py
+│   └── test_summarizer.py
+├── screenshots/
 ├── Dockerfile               # Multi-stage Docker build
 ├── docker-compose.yml       # Compose with persistent volume
 ├── Makefile                 # Build, run, test, lint commands
 ├── pyproject.toml           # Project config (uv + hatch)
-├── .env.example             # Environment variable template
-├── .gitignore               # Git ignore rules
-├── LICENSE                  # MIT License
-└── README.md                # This file
-```
-
----
-
-## Environment Variables
-
-All configuration is optional. Veridex works with zero configuration out of the box.
-
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `STREAMLIT_SERVER_PORT` | Port for the Streamlit web server | `8501` |
-| `STREAMLIT_SERVER_HEADLESS` | Run without opening browser | `true` |
-| `VERIDEX_MAX_SOURCES` | Maximum sources to scrape per query | `10` |
-| `VERIDEX_RATE_LIMIT_DELAY` | Seconds between scrape requests | `1.0` |
-| `VERIDEX_DB_PATH` | SQLite database file path | `data/research_history.db` |
-| `LOG_LEVEL` | Logging verbosity (`DEBUG`, `INFO`, `WARNING`, `ERROR`) | `INFO` |
-
-Copy the template to get started:
-
-```bash
-cp .env.example .env
+├── .env.example
+├── .gitignore
+└── LICENSE                  # MIT
 ```
 
 ---
@@ -382,54 +339,33 @@ cp .env.example .env
 ## Testing
 
 ```bash
-# Run the full test suite
 uv run pytest tests/ -v
-
-# Run with coverage
-uv run pytest tests/ -v --tb=short
 
 # Run a specific test module
 uv run pytest tests/test_credibility.py -v
 
-# Quick import check (all modules)
+# Quick import check
 uv run python -c "from src.agent import ResearchAgent; print('All imports OK')"
 ```
 
 ---
 
-## Responsible Scraping
+## Contributing
 
-Veridex is designed to be a respectful web citizen:
-
-- **robots.txt compliance** -- Every domain's `robots.txt` is fetched and parsed before scraping. Disallowed paths are never accessed.
-- **Rate limiting** -- Configurable delay (default 1 second) between requests to the same domain. No concurrent scraping of a single host.
-- **User-Agent transparency** -- Identifies itself clearly in HTTP headers so site operators can recognize and block it if desired.
-- **Content-only extraction** -- Strips navigation, ads, scripts, and boilerplate. Only extracts the article body text relevant to research.
-- **No login bypass** -- Does not attempt to circumvent paywalls, login walls, or CAPTCHAs. Inaccessible content is skipped gracefully.
-- **Local processing only** -- Scraped content is processed locally via spaCy and scikit-learn. No data is sent to external APIs or third-party services.
-
----
-
-## Why No LLM?
-
-Veridex deliberately avoids large language models. Here is why:
-
-1. **Zero hallucination risk** -- Every sentence in the output traces back to a real source URL. TF-IDF extractive summarization selects actual sentences from actual documents.
-2. **No API keys, no cost, no rate limits** -- Runs fully offline (after initial web search). No OpenAI/Anthropic/Google billing. No vendor lock-in.
-3. **Full transparency** -- The entire pipeline is inspectable. You can see exactly which sources contributed which facts, how credibility was scored, and where sources agree or disagree.
-4. **Reproducibility** -- Same query, same sources, same output. No temperature sampling, no stochastic generation.
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/your-feature`)
+3. Make changes with type hints and tests
+4. Run `make lint` and `make test`
+5. Open a pull request
 
 ---
 
 ## License
 
-MIT License. See [LICENSE](./LICENSE) for details.
+[MIT](LICENSE)
 
 ---
 
 <div align="center">
   <p>Built with classical NLP, zero API keys, and a healthy skepticism of everything on the internet.</p>
-  <p>
-    <a href="#-veridex">Back to top</a>
-  </p>
 </div>
