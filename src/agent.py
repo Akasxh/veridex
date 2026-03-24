@@ -14,7 +14,7 @@ try:
     from src.extractor import ExtractedFacts, FactExtractor
     from src.report import ReportData, ReportGenerator, SourceInfo
     from src.scraper import ScrapedPage, WebScraper
-    from src.search import SearchEngine, SearchResult
+    from src.search import SearchEngine, SearchResult, TavilySearchEngine
     from src.storage import Storage
     from src.summarizer import Summarizer
 except ImportError:
@@ -22,7 +22,7 @@ except ImportError:
     from extractor import ExtractedFacts, FactExtractor  # type: ignore[no-redef]
     from report import ReportData, ReportGenerator, SourceInfo  # type: ignore[no-redef]
     from scraper import ScrapedPage, WebScraper  # type: ignore[no-redef]
-    from search import SearchEngine, SearchResult  # type: ignore[no-redef]
+    from search import SearchEngine, SearchResult, TavilySearchEngine  # type: ignore[no-redef]
     from storage import Storage  # type: ignore[no-redef]
     from summarizer import Summarizer  # type: ignore[no-redef]
 
@@ -114,6 +114,24 @@ def _detect_consensus_and_conflicts(
 from collections.abc import Callable
 
 ProgressCallback = Callable[[str, float], None] | None
+
+
+def create_search_engine(provider: str = "auto") -> SearchEngine | TavilySearchEngine:
+    """Factory that returns a search engine based on *provider*.
+
+    * ``"tavily"`` -- always use Tavily (requires ``TAVILY_API_KEY``).
+    * ``"duckduckgo"`` -- always use DuckDuckGo.
+    * ``"auto"`` (default) -- use Tavily when ``TAVILY_API_KEY`` is set,
+      otherwise fall back to DuckDuckGo.
+    """
+    import os
+
+    provider = provider.lower()
+    if provider == "tavily" or (provider == "auto" and os.environ.get("TAVILY_API_KEY")):
+        logger.info("Using Tavily search engine")
+        return TavilySearchEngine()
+    logger.info("Using DuckDuckGo search engine")
+    return SearchEngine()
 
 
 @dataclass

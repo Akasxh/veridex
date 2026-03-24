@@ -1,8 +1,9 @@
-"""DuckDuckGo search wrapper with rate limiting."""
+"""Search engine wrappers with rate limiting."""
 
 from __future__ import annotations
 
 import logging
+import os
 import time
 from dataclasses import dataclass, field
 from urllib.parse import urlparse
@@ -79,5 +80,73 @@ class SearchEngine:
                     )
         except Exception as e:
             logger.error("Error searching news for '%s': %s", query, e)
+
+        return results
+
+
+@dataclass
+class TavilySearchEngine:
+    """Tavily search engine with the same interface as SearchEngine."""
+
+    max_results: int = 10
+    rate_limit_delay: float = 1.5
+    _last_request_time: float = field(default=0.0, init=False, repr=False)
+    _client: object = field(default=None, init=False, repr=False)
+
+    def __post_init__(self) -> None:
+        from tavily import TavilyClient
+
+        api_key = os.environ.get("TAVILY_API_KEY", "")
+        self._client = TavilyClient(api_key=api_key)
+
+    def _wait_for_rate_limit(self) -> None:
+        elapsed = time.monotonic() - self._last_request_time
+        if elapsed < self.rate_limit_delay:
+            time.sleep(self.rate_limit_delay - elapsed)
+        self._last_request_time = time.monotonic()
+
+    def search(self, query: str, max_results: int | None = None) -> list[SearchResult]:
+        """Search Tavily and return structured results."""
+        n = max_results or self.max_results
+        self._wait_for_rate_limit()
+
+        results: list[SearchResult] = []
+        try:
+            response = self._client.search(query, max_results=n)
+            for item in response.get("results", []):
+                url = item.get("url", "")
+                results.append(
+                    SearchResult(
+                        title=item.get("title", ""),
+                        url=url,
+                        snippet=item.get("content", ""),
+                        source=urlparse(url).netloc if url else "",
+                    )
+                )
+        except Exception as e:
+            logger.error("Error searching Tavily for '%s': %s", query, e)
+
+        return results
+
+    def search_news(self, query: str, max_results: int | None = None) -> list[SearchResult]:
+        """Search Tavily news."""
+        n = max_results or self.max_results
+        self._wait_for_rate_limit()
+
+        results: list[SearchResult] = []
+        try:
+            response = self._client.search(query, max_results=n, topic="news")
+            for item in response.get("results", []):
+                url = item.get("url", "")
+                results.append(
+                    SearchResult(
+                        title=item.get("title", ""),
+                        url=url,
+                        snippet=item.get("content", ""),
+                        source=urlparse(url).netloc if url else "",
+                    )
+                )
+        except Exception as e:
+            logger.error("Error searching Tavily news for '%s': %s", query, e)
 
         return results
