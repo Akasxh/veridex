@@ -9,10 +9,10 @@ import sys
 logger = logging.getLogger(__name__)
 
 try:
-    from src.agent import ResearchAgent
+    from src.agent import ResearchAgent, create_search_engine
     from src.demo import get_demo_queries, get_demo_result
 except ImportError:
-    from agent import ResearchAgent  # type: ignore[no-redef]
+    from agent import ResearchAgent, create_search_engine  # type: ignore[no-redef]
     from demo import get_demo_queries, get_demo_result  # type: ignore[no-redef]
 
 
@@ -32,6 +32,10 @@ def main() -> None:
     parser.add_argument("--search-history", type=str, help="Search past research sessions")
     parser.add_argument("--demo", action="store_true", help="Run with pre-cached demo results (no network)")
     parser.add_argument("--list-demos", action="store_true", help="List available demo queries")
+    parser.add_argument(
+        "--search-provider", default="auto", choices=["auto", "duckduckgo", "tavily"],
+        help="Search provider (default: auto — uses Tavily when TAVILY_API_KEY is set)",
+    )
 
     args = parser.parse_args()
 
@@ -42,7 +46,7 @@ def main() -> None:
         print(f"\nUsage: veridex --demo \"{get_demo_queries()[0]}\"")
         return
 
-    agent = ResearchAgent()
+    agent = ResearchAgent(search_engine=create_search_engine(args.search_provider))
 
     if args.demo:
         if not args.query:

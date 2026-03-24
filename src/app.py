@@ -6,15 +6,17 @@ from collections import Counter
 from datetime import datetime, timedelta
 from typing import Any
 
+import os
+
 import plotly.graph_objects as go
 import streamlit as st
 
 try:
-    from src.agent import ResearchAgent, ResearchResult
+    from src.agent import ResearchAgent, ResearchResult, create_search_engine
     from src.demo import get_demo_queries, get_demo_result
     from src.report import ReportGenerator
 except ImportError:
-    from agent import ResearchAgent, ResearchResult  # type: ignore[no-redef]
+    from agent import ResearchAgent, ResearchResult, create_search_engine  # type: ignore[no-redef]
     from demo import get_demo_queries, get_demo_result  # type: ignore[no-redef]
     from report import ReportGenerator  # type: ignore[no-redef]
 
@@ -554,8 +556,8 @@ section[data-testid="stSidebar"] .stRadio label:hover {
 
 
 @st.cache_resource
-def get_agent() -> ResearchAgent:
-    return ResearchAgent()
+def get_agent(provider: str = "duckduckgo") -> ResearchAgent:
+    return ResearchAgent(search_engine=create_search_engine(provider))
 
 
 # ---------------------------------------------------------------------------
@@ -637,6 +639,15 @@ def render_sidebar_settings() -> None:
     st.divider()
     st.slider("Max sources", 2, 15, 6, key="max_sources")
     st.multiselect("Export formats", ["markdown", "pdf", "json"], default=["markdown"], key="export_formats")
+    provider_options = ["DuckDuckGo"]
+    if os.environ.get("TAVILY_API_KEY"):
+        provider_options.append("Tavily")
+    st.selectbox(
+        "Search provider",
+        provider_options,
+        key="search_provider",
+        help="Tavily requires TAVILY_API_KEY to be set.",
+    )
 
 
 def render_sidebar_demo() -> None:
@@ -1444,8 +1455,6 @@ def main() -> None:
         "<text y='.9em' font-size='90'>&#x1F52C;</text></svg>\">",
         unsafe_allow_html=True,
     )
-    agent = get_agent()
-
     with st.sidebar:
         render_sidebar_brand()
 
@@ -1476,6 +1485,9 @@ def main() -> None:
             render_sidebar_demo()
 
         render_sidebar_footer()
+
+    selected_provider = st.session_state.get("search_provider", "DuckDuckGo").lower()
+    agent = get_agent(selected_provider)
 
     pages = {
         "Dashboard": page_dashboard,
