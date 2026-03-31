@@ -1,8 +1,9 @@
-"""DuckDuckGo search wrapper with rate limiting."""
+"""Search engine wrappers with rate limiting."""
 
 from __future__ import annotations
 
 import logging
+import os
 import time
 from dataclasses import dataclass, field
 from urllib.parse import urlparse
@@ -81,3 +82,96 @@ class SearchEngine:
             logger.error("Error searching news for '%s': %s", query, e)
 
         return results
+
+
+@dataclass
+class TavilySearchEngine:
+    """Tavily search engine with the same interface as SearchEngine."""
+
+    max_results: int = 10
+    api_key: str = field(default="", repr=False)
+    search_depth: str = "basic"
+
+    def __post_init__(self) -> None:
+        from tavily import TavilyClient as _TavilyClient
+
+        key = self.api_key or os.environ.get("TAVILY_API_KEY", "")
+        self._client = _TavilyClient(api_key=key)
+
+    def search(self, query: str, max_results: int | None = None) -> list[SearchResult]:
+        """Search via Tavily and return structured results."""
+        n = max_results or self.max_results
+        results: list[SearchResult] = []
+        try:
+            response = self._client.search(query, max_results=n, search_depth=self.search_depth)
+            for item in response.get("results", []):
+                results.append(
+                    SearchResult(
+                        title=item.get("title", ""),
+                        url=item.get("url", ""),
+                        snippet=item.get("content", ""),
+                        source=urlparse(item.get("url", "")).netloc if item.get("url") else "",
+                    )
+                )
+        except Exception as e:
+            logger.error("Tavily search error for '%s': %s", query, e)
+        return results
+
+    def search_news(self, query: str, max_results: int | None = None) -> list[SearchResult]:
+        """Search Tavily news and return structured results."""
+        n = max_results or self.max_results
+        results: list[SearchResult] = []
+        try:
+            response = self._client.search(query, max_results=n, topic="news")
+            for item in response.get("results", []):
+                results.append(
+                    SearchResult(
+                        title=item.get("title", ""),
+                        url=item.get("url", ""),
+                        snippet=item.get("content", ""),
+                        source=urlparse(item.get("url", "")).netloc if item.get("url") else "",
+                    )
+                )
+        except Exception as e:
+            logger.error("Tavily news search error for '%s': %s", query, e)
+        return results
+
+
+def get_search_engine() -> SearchEngine | TavilySearchEngine:
+    """Factory that returns the appropriate search engine based on env config.
+
+    Uses VERIDEX_SEARCH_PROVIDER (auto|ddg|tavily) and TAVILY_API_KEY to decide.
+    Default provider is "auto", which picks Tavily when TAVILY_API_KEY is set.
+    """
+    provider = os.environ.get("VERIDEX_SEARCH_PROVIDER", "auto").lower()
+    tavily_key = os.environ.get("TAVILY_API_KEY", "")
+
+    if provider == "tavily":
+        if not tavily_key:
+            logger.warning("VERIDEX_SEARCH_PROVIDER=tavily but TAVILY_API_KEY is not set, "
+                           "falling back to DuckDuckGo.")
+            return SearchEngine()
+        try:
+            return TavilySearchEngine(api_key=tavily_key)
+        except ImportError:
+            logger.warning(
+                "tavily-python not installed; falling back to DuckDuckGo. "
+                "Run: pip install veridex[tavily]"
+            )
+            return SearchEngine()
+
+    if provider == "ddg":
+        return SearchEngine()
+
+    # auto: prefer Tavily when key is available
+    if tavily_key:
+        try:
+            return TavilySearchEngine(api_key=tavily_key)
+        except ImportError:
+            logger.warning(
+                "tavily-python not installed; falling back to DuckDuckGo. "
+                "Run: pip install veridex[tavily]"
+            )
+            return SearchEngine()
+
+    return SearchEngine()
