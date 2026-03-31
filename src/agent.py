@@ -14,7 +14,7 @@ try:
     from src.extractor import ExtractedFacts, FactExtractor
     from src.report import ReportData, ReportGenerator, SourceInfo
     from src.scraper import ScrapedPage, WebScraper
-    from src.search import SearchEngine, SearchResult
+    from src.search import SearchEngine, SearchResult, get_search_engine
     from src.storage import Storage
     from src.summarizer import Summarizer
 except ImportError:
@@ -22,7 +22,7 @@ except ImportError:
     from extractor import ExtractedFacts, FactExtractor  # type: ignore[no-redef]
     from report import ReportData, ReportGenerator, SourceInfo  # type: ignore[no-redef]
     from scraper import ScrapedPage, WebScraper  # type: ignore[no-redef]
-    from search import SearchEngine, SearchResult  # type: ignore[no-redef]
+    from search import SearchEngine, SearchResult, get_search_engine  # type: ignore[no-redef]
     from storage import Storage  # type: ignore[no-redef]
     from summarizer import Summarizer  # type: ignore[no-redef]
 
@@ -121,7 +121,7 @@ class ResearchAgent:
     """Orchestrates the full research pipeline."""
 
     max_sources: int = 8
-    search_engine: SearchEngine = field(default_factory=SearchEngine)
+    search_engine: SearchEngine = field(default_factory=get_search_engine)
     scraper: WebScraper = field(default_factory=WebScraper)
     summarizer: Summarizer = field(default_factory=Summarizer)
     extractor: FactExtractor = field(default_factory=FactExtractor)
