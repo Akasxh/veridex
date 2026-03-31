@@ -90,6 +90,7 @@ class TavilySearchEngine:
 
     max_results: int = 10
     api_key: str = field(default="", repr=False)
+    search_depth: str = "basic"
 
     def __post_init__(self) -> None:
         from tavily import TavilyClient as _TavilyClient
@@ -102,7 +103,7 @@ class TavilySearchEngine:
         n = max_results or self.max_results
         results: list[SearchResult] = []
         try:
-            response = self._client.search(query, max_results=n, search_depth="basic")
+            response = self._client.search(query, max_results=n, search_depth=self.search_depth)
             for item in response.get("results", []):
                 results.append(
                     SearchResult(
@@ -150,13 +151,27 @@ def get_search_engine() -> SearchEngine | TavilySearchEngine:
             logger.warning("VERIDEX_SEARCH_PROVIDER=tavily but TAVILY_API_KEY is not set, "
                            "falling back to DuckDuckGo.")
             return SearchEngine()
-        return TavilySearchEngine(api_key=tavily_key)
+        try:
+            return TavilySearchEngine(api_key=tavily_key)
+        except ImportError:
+            logger.warning(
+                "tavily-python not installed; falling back to DuckDuckGo. "
+                "Run: pip install veridex[tavily]"
+            )
+            return SearchEngine()
 
     if provider == "ddg":
         return SearchEngine()
 
     # auto: prefer Tavily when key is available
     if tavily_key:
-        return TavilySearchEngine(api_key=tavily_key)
+        try:
+            return TavilySearchEngine(api_key=tavily_key)
+        except ImportError:
+            logger.warning(
+                "tavily-python not installed; falling back to DuckDuckGo. "
+                "Run: pip install veridex[tavily]"
+            )
+            return SearchEngine()
 
     return SearchEngine()

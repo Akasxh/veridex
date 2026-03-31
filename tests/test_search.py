@@ -90,7 +90,9 @@ class TestTavilySearchEngine:
         assert results[0].url == "https://example.com/t1"
         assert results[0].snippet == "Content 1"
         assert results[1].source == "example.com"
-        mock_client.search.assert_called_once_with("test query", max_results=2, search_depth="basic")
+        mock_client.search.assert_called_once_with(
+            "test query", max_results=2, search_depth="basic"
+        )
 
     @patch("tavily.TavilyClient")
     def test_search_news_uses_news_topic(self, mock_client_cls: MagicMock) -> None:
@@ -120,6 +122,19 @@ class TestTavilySearchEngine:
         assert results == []
 
     @patch("tavily.TavilyClient")
+    def test_search_uses_custom_depth(self, mock_client_cls: MagicMock) -> None:
+        mock_client = MagicMock()
+        mock_client.search.return_value = {"results": []}
+        mock_client_cls.return_value = mock_client
+
+        engine = TavilySearchEngine(api_key="tvly-test", search_depth="advanced")
+        engine.search("test query")
+
+        mock_client.search.assert_called_once_with(
+            "test query", max_results=10, search_depth="advanced"
+        )
+
+    @patch("tavily.TavilyClient")
     def test_search_news_handles_exception(self, mock_client_cls: MagicMock) -> None:
         mock_client = MagicMock()
         mock_client.search.side_effect = RuntimeError("API error")
@@ -137,11 +152,8 @@ class TestGetSearchEngine:
         engine = get_search_engine()
         assert isinstance(engine, TavilySearchEngine)
 
-    @patch.dict("os.environ", {}, clear=False)
+    @patch.dict("os.environ", {"TAVILY_API_KEY": "", "VERIDEX_SEARCH_PROVIDER": ""}, clear=False)
     def test_auto_returns_ddg_when_no_key(self) -> None:
-        import os
-        os.environ.pop("TAVILY_API_KEY", None)
-        os.environ.pop("VERIDEX_SEARCH_PROVIDER", None)
         engine = get_search_engine()
         assert isinstance(engine, SearchEngine)
 
@@ -156,9 +168,19 @@ class TestGetSearchEngine:
         engine = get_search_engine()
         assert isinstance(engine, TavilySearchEngine)
 
-    @patch.dict("os.environ", {"VERIDEX_SEARCH_PROVIDER": "tavily"}, clear=False)
+    @patch.dict("os.environ", {"VERIDEX_SEARCH_PROVIDER": "tavily", "TAVILY_API_KEY": ""}, clear=False)
     def test_tavily_provider_without_key_falls_back(self) -> None:
-        import os
-        os.environ.pop("TAVILY_API_KEY", None)
+        engine = get_search_engine()
+        assert isinstance(engine, SearchEngine)
+
+    @patch.dict("os.environ", {"TAVILY_API_KEY": "tvly-test", "VERIDEX_SEARCH_PROVIDER": "auto"}, clear=False)
+    @patch("src.search.TavilySearchEngine", side_effect=ImportError("No module named 'tavily'"))
+    def test_auto_falls_back_on_import_error(self, mock_tavily_cls: MagicMock) -> None:
+        engine = get_search_engine()
+        assert isinstance(engine, SearchEngine)
+
+    @patch.dict("os.environ", {"TAVILY_API_KEY": "tvly-test", "VERIDEX_SEARCH_PROVIDER": "tavily"}, clear=False)
+    @patch("src.search.TavilySearchEngine", side_effect=ImportError("No module named 'tavily'"))
+    def test_tavily_provider_falls_back_on_import_error(self, mock_tavily_cls: MagicMock) -> None:
         engine = get_search_engine()
         assert isinstance(engine, SearchEngine)
